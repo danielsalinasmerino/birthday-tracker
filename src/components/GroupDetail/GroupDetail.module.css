@@ -1,0 +1,76 @@
+.groupDetail {
+  width: 100vw;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.backButton {
+  background: transparent;
+  border: none;
+  color: #4a5568;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  margin-bottom: 1rem;
+  transition: color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.backButton:hover {
+  color: #2d3748;
+}
+
+.groupName {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #1a202c;
+}
+
+.userCount {
+  font-size: 1rem;
+  color: #718096;
+  margin: 0;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.noMembers {
+  text-align: center;
+  color: #718096;
+  font-size: 1rem;
+  padding: 2rem;
+  background: #f7fafc;
+  border-radius: 8px;
+}
+
+.error {
+  text-align: center;
+  padding: 2rem;
+}
+
+.error h2 {
+  color: #e53e3e;
+  margin-bottom: 1rem;
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+  .groupDetail {
+    padding: 1rem;
+  }
+
+  .groupName {
+    font-size: 1.75rem;
+  }
+}
