@@ -1,5 +1,6 @@
 .birthdayList {
-  width: 100vw;
+  width: 100%;
+  max-width: 100%;
   padding: 2rem;
   box-sizing: border-box;
 }
