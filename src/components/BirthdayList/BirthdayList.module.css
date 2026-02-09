@@ -1,28 +1,35 @@
 .birthdayList {
   width: 100%;
-  max-width: 100%;
-  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
   box-sizing: border-box;
 }
 
 .header {
-  text-align: center;
-  margin-bottom: 2rem;
+  text-align: left;
+  margin-bottom: 4rem;
+  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 2rem;
 }
 
 .groupName {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin: 0 0 0.5rem 0;
-  color: #333;
+  font-size: 2rem;
+  font-weight: 300;
+  margin: 0 0 1rem 0;
+  color: #000000;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 }
 
 .userCount {
-  font-size: 1rem;
-  color: #666;
+  font-size: 0.875rem;
+  color: #666666;
   margin: 0;
+  font-weight: 300;
+  letter-spacing: 0.02em;
 }
 
 .list {
-  margin-top: 2rem;
+  margin-top: 0;
 }
