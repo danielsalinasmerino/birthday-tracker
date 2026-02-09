@@ -3,8 +3,12 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import UserGroups from "./components/UserGroups/UserGroups";
 import GroupDetail from "./components/GroupDetail/GroupDetail";
-import { getUsers, getGroups } from "./services/api";
-import type { User, Group } from "./types";
+import { getUsers, getGroups } from "./domain/usecases";
+import {
+  userRepository,
+  groupRepository,
+} from "./infrastructure/instances/repositories";
+import type { User, Group } from "./domain/models";
 
 function App() {
   const [users, setUsers] = useState<User[]>([]);
@@ -15,8 +19,8 @@ function App() {
     const fetchData = async () => {
       try {
         const [fetchedUsers, fetchedGroups] = await Promise.all([
-          getUsers(),
-          getGroups(),
+          getUsers(userRepository),
+          getGroups(groupRepository),
         ]);
         setUsers(fetchedUsers);
         setGroups(fetchedGroups);
