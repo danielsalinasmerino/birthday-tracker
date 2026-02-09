@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Firestore Data Migration</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 40px;
+        border: 1px solid #e5e5e5;
+      }
+      h1 {
+        font-size: 2rem;
+        font-weight: 300;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        margin-bottom: 2rem;
+      }
+      button {
+        border: 1px solid #000;
+        background: transparent;
+        padding: 0.75em 1.5em;
+        font-size: 0.875em;
+        font-weight: 400;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #000;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      button:hover:not(:disabled) {
+        background: #000;
+        color: #fff;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      #output {
+        margin-top: 2rem;
+        padding: 1rem;
+        background: #fafafa;
+        border: 1px solid #e5e5e5;
+        font-family: "Courier New", monospace;
+        font-size: 0.875rem;
+        white-space: pre-wrap;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+      .success {
+        color: #22c55e;
+      }
+      .error {
+        color: #ef4444;
+      }
+      .info {
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Migrate Data to Firestore</h1>
+      <p style="margin-bottom: 2rem; color: #666">
+        This will upload your mock data to Firebase Firestore.
+      </p>
+      <button id="migrateBtn" onclick="migrateData()">Start Migration</button>
+      <div id="output"></div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        doc,
+        setDoc,
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyBvEfJqaaJtufw0i3ugSzSxM1x905OIS_w",
+        authDomain: "birthday-tracker-ae53b.firebaseapp.com",
+        projectId: "birthday-tracker-ae53b",
+        storageBucket: "birthday-tracker-ae53b.firebasestorage.app",
+        messagingSenderId: "658083449370",
+        appId: "1:658083449370:web:8d21b1e1b4acd28dfcdfa3",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      const mockData = {
+        users: [
+          {
+            id: "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
+            name: "Diego",
+            surname: "Escalona",
+            email: "diegoescalonaro@gmail.com",
+            birthDate: "1995-06-01",
+            groupIds: ["g1h2i3j4-k5l6-4m7n-8o9p-0q1r2s3t4u5v"],
+            showAge: true,
+          },
+          {
+            id: "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+            name: "Aitor",
+            surname: "Galán",
+            email: "aitorgalanygarcia@gmail.com",
+            birthDate: "1995-04-20",
+            groupIds: ["g1h2i3j4-k5l6-4m7n-8o9p-0q1r2s3t4u5v"],
+            showAge: false,
+          },
+          {
+            id: "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
+            name: "Jorge",
+            surname: "Cristóbal",
+            email: "jorge.cristobal.martin@gmail.com",
+            birthDate: "1995-10-13",
+            groupIds: ["g1h2i3j4-k5l6-4m7n-8o9p-0q1r2s3t4u5v"],
+            showAge: true,
+          },
+          {
+            id: "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a",
+            name: "Daniel",
+            surname: "Salinas",
+            email: "danielsalinas305@gmail.com",
+            birthDate: "1995-01-21",
+            groupIds: ["g1h2i3j4-k5l6-4m7n-8o9p-0q1r2s3t4u5v"],
+          },
+        ],
+        groups: [
+          {
+            id: "g1h2i3j4-k5l6-4m7n-8o9p-0q1r2s3t4u5v",
+            name: "Cuca",
+            userIds: [
+              "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
+              "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+              "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
+              "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a",
+            ],
+          },
+        ],
+      };
+
+      function log(message, type = "info") {
+        const output = document.getElementById("output");
+        const span = document.createElement("span");
+        span.className = type;
+        span.textContent = message + "\n";
+        output.appendChild(span);
+        output.scrollTop = output.scrollHeight;
+      }
+
+      window.migrateData = async function () {
+        const btn = document.getElementById("migrateBtn");
+        const output = document.getElementById("output");
+
+        output.innerHTML = "";
+        btn.disabled = true;
+
+        log("🚀 Starting data migration to Firestore...\n", "info");
+
+        try {
+          // Migrate Users
+          log("📝 Migrating users...", "info");
+          for (const user of mockData.users) {
+            const userData = {
+              ...user,
+              birthDate: new Date(user.birthDate),
+            };
+
+            await setDoc(doc(db, "users", user.id), userData);
+            log(`✅ Migrated user: ${user.name} ${user.surname}`, "success");
+          }
+          log(
+            `\n✨ Successfully migrated ${mockData.users.length} users\n`,
+            "success",
+          );
+
+          // Migrate Groups
+          log("👥 Migrating groups...", "info");
+          for (const group of mockData.groups) {
+            await setDoc(doc(db, "groups", group.id), group);
+            log(`✅ Migrated group: ${group.name}`, "success");
+          }
+          log(
+            `\n✨ Successfully migrated ${mockData.groups.length} groups\n`,
+            "success",
+          );
+
+          log("🎉 Migration completed successfully!", "success");
+          log("\n📊 Summary:", "info");
+          log(`   - Users: ${mockData.users.length}`, "info");
+          log(`   - Groups: ${mockData.groups.length}`, "info");
+          log("\n✅ You can now close this page and run your app!", "success");
+        } catch (error) {
+          log(`\n❌ Error during migration: ${error.message}`, "error");
+          console.error(error);
+          btn.disabled = false;
+        }
+      };
+    </script>
+  </body>
+</html>
