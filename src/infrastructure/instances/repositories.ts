@@ -1,4 +1,4 @@
-import { db } from "../firebase/config";
+import { db } from "../adapters/firebase/config";
 import { FirebaseUserRepository } from "../adapters/firebase/FirebaseUserRepository";
 import { FirebaseGroupRepository } from "../adapters/firebase/FirebaseGroupRepository";
 
