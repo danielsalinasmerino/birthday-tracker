@@ -20,7 +20,7 @@ function UserGroups({ userId, groups }: UserGroupsProps) {
   if (userGroups.length === 0) {
     return (
       <div className={styles.userGroups}>
-        <h2 className={styles.title}>My Groups</h2>
+        <h2 className={styles.title}>Groups</h2>
         <p className={styles.noGroups}>You don't belong to any groups yet.</p>
       </div>
     );
@@ -28,7 +28,7 @@ function UserGroups({ userId, groups }: UserGroupsProps) {
 
   return (
     <div className={styles.userGroups}>
-      <h2 className={styles.title}>My Groups</h2>
+      <h2 className={styles.title}>Groups</h2>
       <div className={styles.groupsList}>
         {userGroups.map((group) => (
           <div

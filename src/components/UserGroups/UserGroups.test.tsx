@@ -25,7 +25,7 @@ describe("UserGroups", () => {
   describe("Group Display", () => {
     it("should render title", () => {
       render(<UserGroups userId="user1" groups={mockGroups} />);
-      expect(screen.getByText("My Groups")).toBeInTheDocument();
+      expect(screen.getByText("Groups")).toBeInTheDocument();
     });
 
     it("should display all groups where user belongs", () => {
@@ -98,7 +98,7 @@ describe("UserGroups", () => {
   describe("Edge Cases", () => {
     it("should handle user not in any groups", () => {
       render(<UserGroups userId="nonexistent" groups={mockGroups} />);
-      expect(screen.getByText("My Groups")).toBeInTheDocument();
+      expect(screen.getByText("Groups")).toBeInTheDocument();
       expect(
         screen.getByText("You don't belong to any groups yet."),
       ).toBeInTheDocument();
