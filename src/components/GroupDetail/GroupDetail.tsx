@@ -7,9 +7,10 @@ import styles from "./GroupDetail.module.css";
 interface GroupDetailProps {
   groups: Group[];
   users: User[];
+  currentUserId: string;
 }
 
-function GroupDetail({ groups, users }: GroupDetailProps) {
+function GroupDetail({ groups, users, currentUserId }: GroupDetailProps) {
   const { groupId } = useParams<{ groupId: string }>();
   const navigate = useNavigate();
 
@@ -51,7 +52,13 @@ function GroupDetail({ groups, users }: GroupDetailProps) {
         {sortedUsers.length === 0 ? (
           <p className={styles.noMembers}>No members in this group yet.</p>
         ) : (
-          sortedUsers.map((user) => <BirthdayCard key={user.id} user={user} />)
+          sortedUsers.map((user) => (
+            <BirthdayCard
+              key={user.id}
+              user={user}
+              currentUserId={currentUserId}
+            />
+          ))
         )}
       </div>
     </div>

@@ -9,9 +9,10 @@ import styles from "./BirthdayCard.module.css";
 
 interface BirthdayCardProps {
   user: User;
+  currentUserId?: string;
 }
 
-function BirthdayCard({ user }: BirthdayCardProps) {
+function BirthdayCard({ user, currentUserId }: BirthdayCardProps) {
   const daysUntil = daysUntilBirthday(user.birthDate);
   const birthday = formatBirthday(user.birthDate);
   const nextAge = calculateAge(user.birthDate) + 1;
@@ -22,8 +23,12 @@ function BirthdayCard({ user }: BirthdayCardProps) {
     return styles.daysUntil;
   };
 
+  const isCurrentUser = currentUserId === user.id;
   const fullName = user.surname ? `${user.name} ${user.surname}` : user.name;
-  const displayName = user.showAge ? `${fullName} (${nextAge})` : fullName;
+  const displayNameBase = isCurrentUser ? "Me" : fullName;
+  const displayName = user.showAge
+    ? `${displayNameBase} (${nextAge})`
+    : displayNameBase;
 
   return (
     <div className={styles.birthdayCard}>

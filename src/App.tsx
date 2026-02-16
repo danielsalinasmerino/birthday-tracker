@@ -53,7 +53,13 @@ function App() {
       />
       <Route
         path="/group/:groupId"
-        element={<GroupDetail groups={groups} users={users} />}
+        element={
+          <GroupDetail
+            groups={groups}
+            users={users}
+            currentUserId={currentUserId}
+          />
+        }
       />
     </Routes>
   );
