@@ -1,4 +1,5 @@
 import type { User } from "../../types";
+import { useApp } from "../../hooks/useApp";
 import {
   daysUntilBirthday,
   formatBirthday,
@@ -9,10 +10,10 @@ import styles from "./BirthdayCard.module.css";
 
 interface BirthdayCardProps {
   user: User;
-  currentUserId?: string;
 }
 
-function BirthdayCard({ user, currentUserId }: BirthdayCardProps) {
+function BirthdayCard({ user }: BirthdayCardProps) {
+  const { currentUserId } = useApp();
   const daysUntil = daysUntilBirthday(user.birthDate);
   const birthday = formatBirthday(user.birthDate);
   const nextAge = calculateAge(user.birthDate) + 1;

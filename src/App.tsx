@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./App.css";
+import { AppProvider } from "./contexts/AppContext.tsx";
 import UserGroups from "./components/UserGroups/UserGroups";
 import GroupDetail from "./components/GroupDetail/GroupDetail";
 import { getUsers, getGroups } from "./domain/usecases";
@@ -46,22 +47,18 @@ function App() {
   }
 
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={<UserGroups userId={currentUserId} groups={groups} />}
-      />
-      <Route
-        path="/group/:groupId"
-        element={
-          <GroupDetail
-            groups={groups}
-            users={users}
-            currentUserId={currentUserId}
-          />
-        }
-      />
-    </Routes>
+    <AppProvider currentUserId={currentUserId}>
+      <Routes>
+        <Route
+          path="/"
+          element={<UserGroups userId={currentUserId} groups={groups} />}
+        />
+        <Route
+          path="/group/:groupId"
+          element={<GroupDetail groups={groups} users={users} />}
+        />
+      </Routes>
+    </AppProvider>
   );
 }
 
