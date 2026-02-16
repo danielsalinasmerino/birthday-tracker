@@ -34,6 +34,14 @@
       "email": "danielsalinas305@gmail.com",
       "birthDate": "1995-01-21",
       "groupIds": ["g1h2i3j4-k5l6-4m7n-8o9p-0q1r2s3t4u5v"]
+    },
+    {
+      "id": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6d7f7a",
+      "name": "Jorge",
+      "surname": "Fernández",
+      "email": "jorgefernandez@gmail.com",
+      "birthDate": "1995-01-03",
+      "groupIds": ["g1h2i3j4-k5l6-4m7n-8o9p-0q1r2s3t4u5v"]
     }
   ],
   "groups": [
