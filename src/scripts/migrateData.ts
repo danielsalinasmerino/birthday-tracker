@@ -1,5 +1,5 @@
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "../services/firebase";
+import { db } from "../infrastructure/adapters/firebase/config";
 import mockData from "../data/mockData.json";
 
 async function migrateData() {
@@ -9,6 +9,7 @@ async function migrateData() {
     // Migrate Users
     console.log("📝 Migrating users...");
     for (const user of mockData.users) {
+      console.log(mockData.users.length);
       const userData = {
         ...user,
         birthDate: new Date(user.birthDate),
