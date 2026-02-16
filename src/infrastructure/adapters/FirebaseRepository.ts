@@ -11,10 +11,8 @@ import {
   type Firestore,
   type DocumentData,
 } from "firebase/firestore";
-import type {
-  UserRepository,
-  GroupRepository,
-} from "../../domain/repositories/Repository";
+import type { UserRepository } from "../../domain/repositories/UserRepository";
+import type { GroupRepository } from "../../domain/repositories/GroupRepository";
 import type { User } from "../../domain/models/User";
 import type { Group } from "../../domain/models/Group";
 

@@ -1,4 +1,4 @@
-import type { GroupRepository } from "../repositories/Repository";
+import type { GroupRepository } from "../repositories/GroupRepository";
 import type { Group } from "../models/Group";
 
 export const getGroups = (repository: GroupRepository): Promise<Group[]> => {

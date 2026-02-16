@@ -1,4 +1,4 @@
-import type { UserRepository } from "../repositories/Repository";
+import type { UserRepository } from "../repositories/UserRepository";
 import type { User } from "../models/User";
 
 export const getUsers = (repository: UserRepository): Promise<User[]> => {
