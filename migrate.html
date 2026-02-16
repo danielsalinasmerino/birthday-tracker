@@ -84,6 +84,7 @@
         doc,
         setDoc,
       } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+      import mockData from "./src/data/mockData.json" assert { type: "json" };
 
       // Firebase configuration
       const firebaseConfig = {
@@ -97,67 +98,6 @@
 
       const app = initializeApp(firebaseConfig);
       const db = getFirestore(app);
-
-      const mockData = {
-        users: [
-          {
-            id: "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
-            name: "Diego",
-            surname: "Escalona",
-            email: "diegoescalonaro@gmail.com",
-            birthDate: "1995-06-01",
-            groupIds: ["g1h2i3j4-k5l6-4m7n-8o9p-0q1r2s3t4u5v"],
-            showAge: true,
-          },
-          {
-            id: "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
-            name: "Aitor",
-            surname: "Galán",
-            email: "aitorgalanygarcia@gmail.com",
-            birthDate: "1995-04-20",
-            groupIds: ["g1h2i3j4-k5l6-4m7n-8o9p-0q1r2s3t4u5v"],
-            showAge: false,
-          },
-          {
-            id: "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
-            name: "Jorge",
-            surname: "Cristóbal",
-            email: "jorge.cristobal.martin@gmail.com",
-            birthDate: "1995-10-13",
-            groupIds: ["g1h2i3j4-k5l6-4m7n-8o9p-0q1r2s3t4u5v"],
-            showAge: true,
-          },
-          {
-            id: "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a",
-            name: "Daniel",
-            surname: "Salinas",
-            email: "danielsalinas305@gmail.com",
-            birthDate: "1995-01-21",
-            groupIds: ["g1h2i3j4-k5l6-4m7n-8o9p-0q1r2s3t4u5v"],
-          },
-          {
-            id: "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6d7f7a",
-            name: "Jorge",
-            surname: "Fernández",
-            email: "jorgefernandez@gmail.com",
-            birthDate: "1995-01-03",
-            groupIds: ["g1h2i3j4-k5l6-4m7n-8o9p-0q1r2s3t4u5v"],
-          },
-        ],
-        groups: [
-          {
-            id: "g1h2i3j4-k5l6-4m7n-8o9p-0q1r2s3t4u5v",
-            name: "Cuca",
-            userIds: [
-              "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
-              "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
-              "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
-              "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a",
-              "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6d7f7a",
-            ],
-          },
-        ],
-      };
 
       function log(message, type = "info") {
         const output = document.getElementById("output");

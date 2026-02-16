@@ -24,7 +24,10 @@
       "surname": "Cristóbal",
       "email": "jorge.cristobal.martin@gmail.com",
       "birthDate": "1995-10-13",
-      "groupIds": ["g1h2i3j4-k5l6-4m7n-8o9p-0q1r2s3t4u5v"],
+      "groupIds": [
+        "g1h2i3j4-k5l6-4m7n-8o9p-0q1r2s3t4u5v",
+        "g1h3i5j4-l5l6-4m7n-8o9p-0q1r2s3t4u5v"
+      ],
       "showAge": true
     },
     {
@@ -33,7 +36,10 @@
       "surname": "Salinas",
       "email": "danielsalinas305@gmail.com",
       "birthDate": "1995-01-21",
-      "groupIds": ["g1h2i3j4-k5l6-4m7n-8o9p-0q1r2s3t4u5v"]
+      "groupIds": [
+        "g1h2i3j4-k5l6-4m7n-8o9p-0q1r2s3t4u5v",
+        "g1h3i5j4-l5l6-4m7n-8o9p-0q1r2s3t4u5v"
+      ]
     },
     {
       "id": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6d7f7a",
@@ -42,6 +48,14 @@
       "email": "jorgefernandez@gmail.com",
       "birthDate": "1995-01-03",
       "groupIds": ["g1h2i3j4-k5l6-4m7n-8o9p-0q1r2s3t4u5v"]
+    },
+    {
+      "id": "d4e5f6a8-b8c9-4d0e-1d2a-3b5c5d6d7i7a",
+      "name": "José Carlos",
+      "surname": "Montenegro",
+      "email": "carmontenegro10@gmail.com",
+      "birthDate": "1996-08-02",
+      "groupIds": ["g1h3i5j4-l5l6-4m7n-8o9p-0q1r2s3t4u5v"]
     }
   ],
   "groups": [
@@ -54,6 +68,15 @@
         "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
         "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a",
         "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6d7f7a"
+      ]
+    },
+    {
+      "id": "g1h3i5j4-l5l6-4m7n-8o9p-0q1r2s3t4u5v",
+      "name": "Fans",
+      "userIds": [
+        "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a",
+        "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
+        "d4e5f6a8-b8c9-4d0e-1d2a-3b5c5d6d7i7a"
       ]
     }
   ]
