@@ -152,4 +152,57 @@ describe("BirthdayCard", () => {
       expect(screen.getByText("March 20")).toBeInTheDocument();
     });
   });
+
+  describe("Group Name Display", () => {
+    it("should display group name when provided", () => {
+      const user = createMockUser();
+      render(<BirthdayCard user={user} groupName="Family" />);
+      expect(screen.getByText("Family")).toBeInTheDocument();
+    });
+
+    it("should not display group name when not provided", () => {
+      const user = createMockUser();
+      render(<BirthdayCard user={user} />);
+      expect(screen.queryByText("Family")).not.toBeInTheDocument();
+    });
+  });
+
+  describe("Click Handler", () => {
+    it("should call onClick when card is clicked", () => {
+      const handleClick = vi.fn();
+      const user = createMockUser();
+      render(<BirthdayCard user={user} onClick={handleClick} />);
+
+      const card = screen.getByRole("button");
+      card.click();
+
+      expect(handleClick).toHaveBeenCalledTimes(1);
+    });
+
+    it("should have role='button' when onClick is provided", () => {
+      const handleClick = vi.fn();
+      const user = createMockUser();
+      render(<BirthdayCard user={user} onClick={handleClick} />);
+
+      expect(screen.getByRole("button")).toBeInTheDocument();
+    });
+
+    it("should not have role='button' when onClick is not provided", () => {
+      const user = createMockUser();
+      render(<BirthdayCard user={user} />);
+
+      expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    });
+
+    it("should apply clickable class when onClick is provided", () => {
+      const handleClick = vi.fn();
+      const user = createMockUser();
+      const { container } = render(
+        <BirthdayCard user={user} onClick={handleClick} />,
+      );
+
+      const card = container.querySelector('[class*="birthdayCard"]');
+      expect(card?.className).toContain("clickable");
+    });
+  });
 });

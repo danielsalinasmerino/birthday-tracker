@@ -10,9 +10,11 @@ import styles from "./BirthdayCard.module.css";
 
 interface BirthdayCardProps {
   user: User;
+  groupName?: string;
+  onClick?: () => void;
 }
 
-function BirthdayCard({ user }: BirthdayCardProps) {
+function BirthdayCard({ user, groupName, onClick }: BirthdayCardProps) {
   const { currentUserId } = useApp();
   const daysUntil = daysUntilBirthday(user.birthDate);
   const birthday = formatBirthday(user.birthDate);
@@ -31,10 +33,29 @@ function BirthdayCard({ user }: BirthdayCardProps) {
     ? `${displayNameBase} (${nextAge})`
     : displayNameBase;
 
+  const cardClassName = onClick
+    ? `${styles.birthdayCard} ${styles.clickable}`
+    : styles.birthdayCard;
+
   return (
-    <div className={styles.birthdayCard}>
+    <div
+      className={cardClassName}
+      onClick={onClick}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={
+        onClick
+          ? (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                onClick();
+              }
+            }
+          : undefined
+      }
+    >
       <div className={styles.userInfo}>
         <h3 className={styles.userName}>{displayName}</h3>
+        {groupName && <p className={styles.groupName}>{groupName}</p>}
       </div>
       <div className={styles.birthdayInfo}>
         <p className={styles.birthdayDate}>{birthday}</p>
