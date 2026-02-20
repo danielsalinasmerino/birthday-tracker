@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
+import { AppProvider } from "../../../contexts/AppContext.tsx";
 import PeopleList from "../PeopleList";
 import type { Group, User } from "../../../types";
 
@@ -53,9 +54,11 @@ describe("PeopleList", () => {
 
   const renderPeopleList = (userId: string) => {
     return render(
-      <BrowserRouter>
-        <PeopleList userId={userId} groups={mockGroups} users={mockUsers} />
-      </BrowserRouter>,
+      <AppProvider currentUserId={userId}>
+        <BrowserRouter>
+          <PeopleList userId={userId} groups={mockGroups} users={mockUsers} />
+        </BrowserRouter>
+      </AppProvider>,
     );
   };
 
@@ -77,19 +80,22 @@ describe("PeopleList", () => {
   it("displays group names for each person", () => {
     renderPeopleList("user1");
 
-    expect(screen.getByText("Family")).toBeInTheDocument();
-    expect(screen.getByText("Friends")).toBeInTheDocument();
+    // User2 and User3 are in Family, User4 is in Friends
+    expect(screen.getAllByText(/Family/)).toHaveLength(2);
+    expect(screen.getByText(/Friends/)).toBeInTheDocument();
   });
 
   it("shows message when no people found", () => {
     const emptyGroups: Group[] = [
-      { id: "group1", name: "Empty Group", userIds: ["user1"] },
+      { id: "empty-group", name: "Empty Group", userIds: ["user1"] },
     ];
 
     render(
-      <BrowserRouter>
-        <PeopleList userId="user1" groups={emptyGroups} users={mockUsers} />
-      </BrowserRouter>,
+      <AppProvider currentUserId="user1">
+        <BrowserRouter>
+          <PeopleList userId="user1" groups={emptyGroups} users={mockUsers} />
+        </BrowserRouter>
+      </AppProvider>,
     );
 
     expect(
@@ -115,14 +121,33 @@ describe("PeopleList", () => {
       { id: "group2", name: "Friends", userIds: ["user1", "user2"] },
     ];
 
+    const usersInMultipleGroups: User[] = [
+      {
+        id: "user1",
+        name: "Daniel",
+        surname: "Salinas",
+        birthDate: new Date("1990-01-15"),
+        groupIds: ["group1", "group2"],
+      },
+      {
+        id: "user2",
+        name: "John",
+        surname: "Doe",
+        birthDate: new Date("1985-03-20"),
+        groupIds: ["group1", "group2"], // User2 now belongs to both groups
+      },
+    ];
+
     render(
-      <BrowserRouter>
-        <PeopleList
-          userId="user1"
-          groups={overlappingGroups}
-          users={mockUsers}
-        />
-      </BrowserRouter>,
+      <AppProvider currentUserId="user1">
+        <BrowserRouter>
+          <PeopleList
+            userId="user1"
+            groups={overlappingGroups}
+            users={usersInMultipleGroups}
+          />
+        </BrowserRouter>
+      </AppProvider>,
     );
 
     // John should appear only once

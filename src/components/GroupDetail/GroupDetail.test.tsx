@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
+import { AppProvider } from "../../contexts/AppContext.tsx";
 import GroupDetail from "./GroupDetail";
 import type { Group, User } from "../../types";
 
@@ -51,14 +52,16 @@ describe("GroupDetail", () => {
 
   const renderWithRouter = (groupId: string) => {
     return render(
-      <MemoryRouter initialEntries={[`/group/${groupId}`]}>
-        <Routes>
-          <Route
-            path="/group/:groupId"
-            element={<GroupDetail groups={mockGroups} users={mockUsers} />}
-          />
-        </Routes>
-      </MemoryRouter>,
+      <AppProvider currentUserId="current-user">
+        <MemoryRouter initialEntries={[`/group/${groupId}`]}>
+          <Routes>
+            <Route
+              path="/group/:groupId"
+              element={<GroupDetail groups={mockGroups} users={mockUsers} />}
+            />
+          </Routes>
+        </MemoryRouter>
+      </AppProvider>,
     );
   };
 
@@ -105,14 +108,16 @@ describe("GroupDetail", () => {
         },
       ];
       render(
-        <MemoryRouter initialEntries={["/group/group3"]}>
-          <Routes>
-            <Route
-              path="/group/:groupId"
-              element={<GroupDetail groups={emptyGroups} users={[]} />}
-            />
-          </Routes>
-        </MemoryRouter>,
+        <AppProvider currentUserId="current-user">
+          <MemoryRouter initialEntries={["/group/group3"]}>
+            <Routes>
+              <Route
+                path="/group/:groupId"
+                element={<GroupDetail groups={emptyGroups} users={[]} />}
+              />
+            </Routes>
+          </MemoryRouter>
+        </AppProvider>,
       );
       expect(
         screen.getByText("No members in this group yet."),

@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { AppProvider } from "../../../contexts/AppContext.tsx";
 import BirthdayCard from "../BirthdayCard";
 import type { User } from "../../../types";
 
@@ -27,16 +28,25 @@ describe("BirthdayCard", () => {
     ...overrides,
   });
 
+  const renderWithProvider = (
+    ui: React.ReactElement,
+    currentUserId = "current-user",
+  ) => {
+    return render(
+      <AppProvider currentUserId={currentUserId}>{ui}</AppProvider>,
+    );
+  };
+
   describe("User Display", () => {
     it("should render user name and surname", () => {
       const user = createMockUser();
-      render(<BirthdayCard user={user} />);
+      renderWithProvider(<BirthdayCard user={user} />);
       expect(screen.getByText("John Doe")).toBeInTheDocument();
     });
 
     it("should render user name without surname when surname is not provided", () => {
       const user = createMockUser({ surname: undefined });
-      render(<BirthdayCard user={user} />);
+      renderWithProvider(<BirthdayCard user={user} />);
       expect(screen.getByText("John")).toBeInTheDocument();
     });
 
@@ -45,14 +55,14 @@ describe("BirthdayCard", () => {
         birthDate: new Date("1990-02-15"),
         showAge: true,
       });
-      render(<BirthdayCard user={user} />);
+      renderWithProvider(<BirthdayCard user={user} />);
       // Age will be 36 on next birthday (Feb 15, 2026)
       expect(screen.getByText(/John Doe \(36\)/)).toBeInTheDocument();
     });
 
     it("should not display age when showAge is false", () => {
       const user = createMockUser({ showAge: false });
-      render(<BirthdayCard user={user} />);
+      renderWithProvider(<BirthdayCard user={user} />);
       expect(screen.getByText("John Doe")).toBeInTheDocument();
       expect(screen.queryByText(/\(\d+\)/)).not.toBeInTheDocument();
     });
@@ -61,7 +71,7 @@ describe("BirthdayCard", () => {
   describe("Birthday Information", () => {
     it("should display formatted birthday date", () => {
       const user = createMockUser({ birthDate: new Date("1990-02-15") });
-      render(<BirthdayCard user={user} />);
+      renderWithProvider(<BirthdayCard user={user} />);
       expect(screen.getByText("February 15")).toBeInTheDocument();
     });
 
@@ -69,7 +79,7 @@ describe("BirthdayCard", () => {
       const user = createMockUser({
         birthDate: new Date(1990, 0, 29), // January 29, 1990 in local time
       });
-      render(<BirthdayCard user={user} />);
+      renderWithProvider(<BirthdayCard user={user} />);
       expect(screen.getByText("Today! 🎉")).toBeInTheDocument();
     });
 
@@ -77,7 +87,7 @@ describe("BirthdayCard", () => {
       const user = createMockUser({
         birthDate: new Date(1990, 0, 30), // January 30, 1990 in local time
       });
-      render(<BirthdayCard user={user} />);
+      renderWithProvider(<BirthdayCard user={user} />);
       expect(screen.getByText("Tomorrow")).toBeInTheDocument();
     });
 
@@ -85,13 +95,13 @@ describe("BirthdayCard", () => {
       const user = createMockUser({
         birthDate: new Date(1990, 1, 5), // February 5, 1990 in local time
       });
-      render(<BirthdayCard user={user} />);
+      renderWithProvider(<BirthdayCard user={user} />);
       expect(screen.getByText("In 7 days")).toBeInTheDocument();
     });
 
     it("should display month format for distant birthdays", () => {
       const user = createMockUser({ birthDate: new Date("1990-06-15") });
-      render(<BirthdayCard user={user} />);
+      renderWithProvider(<BirthdayCard user={user} />);
       const daysText = screen.getByText(/In \d+ months?/);
       expect(daysText).toBeInTheDocument();
     });
@@ -102,7 +112,7 @@ describe("BirthdayCard", () => {
       const user = createMockUser({
         birthDate: new Date(1990, 0, 29), // January 29, 1990 in local time
       });
-      render(<BirthdayCard user={user} />);
+      renderWithProvider(<BirthdayCard user={user} />);
       const daysElement = screen.getByText("Today! 🎉");
       expect(daysElement.className).toContain("today");
     });
@@ -111,14 +121,14 @@ describe("BirthdayCard", () => {
       const user = createMockUser({
         birthDate: new Date(1990, 1, 5), // February 5, 1990 in local time
       });
-      render(<BirthdayCard user={user} />);
+      renderWithProvider(<BirthdayCard user={user} />);
       const daysElement = screen.getByText("In 7 days");
       expect(daysElement.className).toContain("soon");
     });
 
     it("should not apply special class for distant birthdays", () => {
       const user = createMockUser({ birthDate: new Date("1990-06-15") });
-      const { container } = render(<BirthdayCard user={user} />);
+      const { container } = renderWithProvider(<BirthdayCard user={user} />);
       const daysElement = container.querySelector('[class*="daysUntil"]');
       expect(daysElement?.className).not.toContain("today");
       expect(daysElement?.className).not.toContain("soon");
@@ -128,7 +138,7 @@ describe("BirthdayCard", () => {
   describe("Edge Cases", () => {
     it("should handle leap year birthdays", () => {
       const user = createMockUser({ birthDate: new Date("2000-02-29") });
-      render(<BirthdayCard user={user} />);
+      renderWithProvider(<BirthdayCard user={user} />);
       expect(screen.getByText("February 29")).toBeInTheDocument();
     });
 
@@ -137,7 +147,7 @@ describe("BirthdayCard", () => {
       const user = createMockUser({
         birthDate: new Date(1990, 0, 1), // January 1, 1990 in local time
       });
-      render(<BirthdayCard user={user} />);
+      renderWithProvider(<BirthdayCard user={user} />);
       expect(screen.getByText("Tomorrow")).toBeInTheDocument();
     });
 
@@ -147,7 +157,7 @@ describe("BirthdayCard", () => {
         name: "Jane",
         birthDate: new Date("1995-03-20"),
       };
-      render(<BirthdayCard user={user} />);
+      renderWithProvider(<BirthdayCard user={user} />);
       expect(screen.getByText("Jane")).toBeInTheDocument();
       expect(screen.getByText("March 20")).toBeInTheDocument();
     });
@@ -156,13 +166,13 @@ describe("BirthdayCard", () => {
   describe("Group Name Display", () => {
     it("should display group name when provided", () => {
       const user = createMockUser();
-      render(<BirthdayCard user={user} groupName="Family" />);
+      renderWithProvider(<BirthdayCard user={user} groupName="Family" />);
       expect(screen.getByText("Family")).toBeInTheDocument();
     });
 
     it("should not display group name when not provided", () => {
       const user = createMockUser();
-      render(<BirthdayCard user={user} />);
+      renderWithProvider(<BirthdayCard user={user} />);
       expect(screen.queryByText("Family")).not.toBeInTheDocument();
     });
   });
@@ -171,7 +181,7 @@ describe("BirthdayCard", () => {
     it("should call onClick when card is clicked", () => {
       const handleClick = vi.fn();
       const user = createMockUser();
-      render(<BirthdayCard user={user} onClick={handleClick} />);
+      renderWithProvider(<BirthdayCard user={user} onClick={handleClick} />);
 
       const card = screen.getByRole("button");
       card.click();
@@ -182,14 +192,14 @@ describe("BirthdayCard", () => {
     it("should have role='button' when onClick is provided", () => {
       const handleClick = vi.fn();
       const user = createMockUser();
-      render(<BirthdayCard user={user} onClick={handleClick} />);
+      renderWithProvider(<BirthdayCard user={user} onClick={handleClick} />);
 
       expect(screen.getByRole("button")).toBeInTheDocument();
     });
 
     it("should not have role='button' when onClick is not provided", () => {
       const user = createMockUser();
-      render(<BirthdayCard user={user} />);
+      renderWithProvider(<BirthdayCard user={user} />);
 
       expect(screen.queryByRole("button")).not.toBeInTheDocument();
     });
@@ -197,7 +207,7 @@ describe("BirthdayCard", () => {
     it("should apply clickable class when onClick is provided", () => {
       const handleClick = vi.fn();
       const user = createMockUser();
-      const { container } = render(
+      const { container } = renderWithProvider(
         <BirthdayCard user={user} onClick={handleClick} />,
       );
 

@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { AppProvider } from "../../../contexts/AppContext.tsx";
 import BirthdayList from "../BirthdayList";
 import type { User, Group } from "../../../types";
 
@@ -16,6 +17,18 @@ describe("BirthdayList", () => {
     globalThis.Date = originalDate;
     vi.restoreAllMocks();
   });
+
+  const renderWithProvider = (
+    group: Group,
+    users: User[],
+    currentUserId = "current-user",
+  ) => {
+    return render(
+      <AppProvider currentUserId={currentUserId}>
+        <BirthdayList group={group} users={users} />
+      </AppProvider>,
+    );
+  };
 
   const mockGroup: Group = {
     id: "group1",
@@ -56,12 +69,12 @@ describe("BirthdayList", () => {
 
   describe("Group Display", () => {
     it("should render group name", () => {
-      render(<BirthdayList group={mockGroup} users={mockUsers} />);
+      renderWithProvider(mockGroup, mockUsers);
       expect(screen.getByText("Test Group")).toBeInTheDocument();
     });
 
     it("should display correct member count with plural", () => {
-      render(<BirthdayList group={mockGroup} users={mockUsers} />);
+      renderWithProvider(mockGroup, mockUsers);
       expect(screen.getByText("3 members")).toBeInTheDocument();
     });
 
@@ -71,7 +84,7 @@ describe("BirthdayList", () => {
         name: "Single Group",
         userIds: ["4"],
       };
-      render(<BirthdayList group={singleUserGroup} users={mockUsers} />);
+      renderWithProvider(singleUserGroup, mockUsers);
       expect(screen.getByText("1 member")).toBeInTheDocument();
     });
 
@@ -81,14 +94,14 @@ describe("BirthdayList", () => {
         name: "Empty Group",
         userIds: [],
       };
-      render(<BirthdayList group={emptyGroup} users={mockUsers} />);
+      renderWithProvider(emptyGroup, mockUsers);
       expect(screen.getByText("0 members")).toBeInTheDocument();
     });
   });
 
   describe("User Filtering", () => {
     it("should only display users in the specified group", () => {
-      render(<BirthdayList group={mockGroup} users={mockUsers} />);
+      renderWithProvider(mockGroup, mockUsers);
       expect(screen.getByText("Alice Smith")).toBeInTheDocument();
       expect(screen.getByText("Bob Johnson")).toBeInTheDocument();
       expect(screen.getByText("Charlie Brown")).toBeInTheDocument();
@@ -104,7 +117,7 @@ describe("BirthdayList", () => {
           birthDate: new Date(1993, 4, 10), // May 10, 1993
         },
       ];
-      render(<BirthdayList group={mockGroup} users={usersWithNoGroups} />);
+      renderWithProvider(mockGroup, usersWithNoGroups);
       expect(screen.queryByText("Eve")).not.toBeInTheDocument();
     });
 
@@ -115,21 +128,14 @@ describe("BirthdayList", () => {
         birthDate: new Date(1991, 3, 15), // April 15, 1991
         groupIds: ["group1", "group2"],
       };
-      render(
-        <BirthdayList
-          group={mockGroup}
-          users={[...mockUsers, multiGroupUser]}
-        />,
-      );
+      renderWithProvider(mockGroup, [...mockUsers, multiGroupUser]);
       expect(screen.getByText("Frank")).toBeInTheDocument();
     });
   });
 
   describe("Sorting", () => {
     it("should sort users by upcoming birthday (closest first)", () => {
-      const { container } = render(
-        <BirthdayList group={mockGroup} users={mockUsers} />,
-      );
+      const { container } = renderWithProvider(mockGroup, mockUsers);
       const cards = container.querySelectorAll('[class*="birthdayCard"]');
 
       // Get the text content of each card
@@ -145,7 +151,7 @@ describe("BirthdayList", () => {
     });
 
     it("should maintain sort order when rendering", () => {
-      render(<BirthdayList group={mockGroup} users={mockUsers} />);
+      renderWithProvider(mockGroup, mockUsers);
 
       // Check that "Today!" appears before "In X days"
       const allText = screen.getAllByText(/Today!|In \d+/);
@@ -160,18 +166,14 @@ describe("BirthdayList", () => {
         name: "Empty Group",
         userIds: [],
       };
-      const { container } = render(
-        <BirthdayList group={emptyGroup} users={mockUsers} />,
-      );
+      const { container } = renderWithProvider(emptyGroup, mockUsers);
       const cards = container.querySelectorAll('[class*="birthdayCard"]');
       expect(cards.length).toBe(0);
       expect(screen.getByText("0 members")).toBeInTheDocument();
     });
 
     it("should render with empty users array", () => {
-      const { container } = render(
-        <BirthdayList group={mockGroup} users={[]} />,
-      );
+      const { container } = renderWithProvider(mockGroup, []);
       const cards = container.querySelectorAll('[class*="birthdayCard"]');
       expect(cards.length).toBe(0);
     });
@@ -179,15 +181,13 @@ describe("BirthdayList", () => {
 
   describe("Integration with BirthdayCard", () => {
     it("should render BirthdayCard for each user in group", () => {
-      const { container } = render(
-        <BirthdayList group={mockGroup} users={mockUsers} />,
-      );
+      const { container } = renderWithProvider(mockGroup, mockUsers);
       const cards = container.querySelectorAll('[class*="birthdayCard"]');
       expect(cards.length).toBe(3); // Only users in group1
     });
 
     it("should pass correct user data to BirthdayCard", () => {
-      render(<BirthdayList group={mockGroup} users={mockUsers} />);
+      renderWithProvider(mockGroup, mockUsers);
 
       // Verify that each user's information is displayed
       expect(screen.getByText("Alice Smith")).toBeInTheDocument();
@@ -208,18 +208,15 @@ describe("BirthdayList", () => {
         name: "Test Group",
         userIds: [],
       };
-      render(<BirthdayList group={groupWithoutUserIds} users={mockUsers} />);
+      renderWithProvider(groupWithoutUserIds, mockUsers);
       expect(screen.getByText("0 members")).toBeInTheDocument();
     });
 
     it("should handle users with all birthdays in the past for this year", () => {
       vi.setSystemTime(new Date(2026, 11, 31, 0, 0, 0)); // December 31, 2026
-      render(<BirthdayList group={mockGroup} users={mockUsers} />);
+      const { container } = renderWithProvider(mockGroup, mockUsers);
 
       // All birthdays should show as next year
-      const { container } = render(
-        <BirthdayList group={mockGroup} users={mockUsers} />,
-      );
       const cards = container.querySelectorAll('[class*="birthdayCard"]');
       expect(cards.length).toBe(3);
     });
@@ -245,7 +242,7 @@ describe("BirthdayList", () => {
         userIds: ["1", "2"],
       };
 
-      render(<BirthdayList group={group} users={sameBirthdayUsers} />);
+      renderWithProvider(group, sameBirthdayUsers);
       expect(screen.getByText("User1")).toBeInTheDocument();
       expect(screen.getByText("User2")).toBeInTheDocument();
       expect(screen.getAllByText("February 15")).toHaveLength(2);
